@@ -13,6 +13,7 @@ import { FaRobot } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import { createClient } from "@/utils/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { AnalysisType } from "./sections";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -20,10 +21,12 @@ export const maxDuration = 30;
 export default function Chat({
   id,
   complete,
+  analysis,
   initialMessages,
 }: {
   id: string;
   complete: boolean;
+  analysis: AnalysisType;
   initialMessages: any[];
 }) {
   const [messages, setMessages] = useState<CoreMessage[]>(initialMessages);
@@ -39,15 +42,14 @@ export default function Chat({
 
   const [input, setInput] = useState("");
   useEffect(() => {
-    if (!messages.length)
+    if (!messages.length && analysis)
       setMessages([
         {
           role: "assistant",
-          content:
-            "Hello! I am SkinVis.ai, your personal skin disease assistant. I am here to help you with any skin-related questions you may have. I see that you have XXX disease, and I will do my best to assist you. If you have any questions, feel free to ask!",
+          content: `Hello! I am SkinVis.ai, your personal skin disease assistant. I am here to help you with any skin-related questions you may have. I see that you have ${analysis?.class}, and I will do my best to assist you. If you have any questions, feel free to ask! **It is important to note that I am not a medical professional and cannot provide medical advice. If you are concerned about your skin, please consult a dermatologist for a proper diagnosis and treatment plan.**`,
         },
       ]);
-  }, []);
+  }, [analysis]);
   const supabase = createClient();
 
   const updateChat = async (messages: CoreMessage[]) => {
@@ -97,7 +99,7 @@ export default function Chat({
         {
           role: "system",
           content:
-            "Your name is SkinVis.ai (always state your name in bold). You are a helpful AI Assistant that is specialized in helping people answer questions about SKIN DISEASES. You must be very respectful at all times, understand the user's requests, and provide accurate information and solutions at all times. If the user asks anything that is not related to Skin Disease, please state that the user is going off topic, and that you are made specifically for help with Skin Disease. YOU MUST NOT PROVIDE ANY INFORMATION THAT IS NOT RELATED TO Skin Disease, INSTEAD SAY THAT YOU ARE NOT PROGRAMMED TO HELP WITH THAT TOPIC.",
+            "Your name is SkinVis.ai (always state your name in bold). You are a helpful AI Assistant that is specialized in helping people answer questions about SKIN DISEASES. You must be very respectful at all times, understand the user's requests, and provide accurate information and solutions at all times. If the user asks anything that is not related to Skin Disease, please state that the user is going off topic, and that you are made specifically for help with Skin Disease. YOU MUST NOT PROVIDE ANY INFORMATION THAT IS NOT RELATED TO Skin Disease, INSTEAD SAY THAT YOU ARE NOT PROGRAMMED TO HELP WITH THAT TOPIC. Do not state that you are not a doctor, as its already said in the first message",
         },
         ...newMessages,
         {

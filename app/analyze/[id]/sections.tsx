@@ -6,7 +6,7 @@ import Chat from "./chat";
 import { Button } from "@/components/ui/button";
 
 export type AnalysisType = {
-  type: string;
+  class: string;
   probability: string;
 } | null;
 
@@ -32,12 +32,13 @@ const Sections = ({
           analysis={analysis}
         />
       </div>
-      <div className="h-full w-full bg-black rounded-2xl p-4 fc gap-2">
+      <div className="h-full w-full bg-black rounded-2xl p-4 fc gap-2 overflow-hidden">
         <div className="text-xl font-bold w-full text-left">
           SkinVis.ai Chat
         </div>
         <Chat
           complete={!!analysis}
+          analysis={analysis}
           id={id}
           initialMessages={initialMessages[0]?.messages || []}
         />

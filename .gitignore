@@ -1,3 +1,6 @@
 /dataset/
 /_pycache_/
 /.idea/
+.env
+skin_cancer_detection_vgg16.h5
+images/
